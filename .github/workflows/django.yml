@@ -30,5 +30,33 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+    - name: Install Flake8
+      run: pip install flake8
+
+    - name: Lint with Flake8
+      run: |
+        flake8 . --count --select=E9, F63, F7, F82 --show-source --statistics
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-lenght=127 --statistics
+
+    - name: Install Coverage
+      run: pip install coverage
+
+    - name: Run Tests Coverage
+      run: | 
+        coverage run --source='.' manage.py test
+        coverage report -m
+
+    - name: Install Bandit
+      run: pip install bandit
+
+    - name: Security Scan
+      run: bandit -r . -x ./venv
+
+    - name: Install pip-audit
+      run: pip install pip-audit
+
+    - name: Audit Dependencies
+      run: pip-audit
+    
     - name: Run Tests
       run: python manage.py test
